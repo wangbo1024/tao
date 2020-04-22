@@ -7,5 +7,16 @@
     <select id="findTbItemById" resultType="com.taotao.pojo.TbItem">
         SELECT * FROM tbitem WHERE id = #{id}
     </select>
-
+    <select id="findTbItemsCount" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM tbitem
+    </select>
+    <select id="findAllTbItem" resultType="com.taotao.pojo.TbItem">
+        SELECT * FROM tbitem LIMIT #{start},#{size}
+    </select>
+    <!--<select id="findSearchTbItem" resultType="com.taotao.pojo.TbItem">
+        SELECT * FROM tbitem WHERE title LIKE "%${}%"
+    </select>
+    <select id="findSearchTbItemsCount" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM tbitem
+    </select>-->
 </mapper>
