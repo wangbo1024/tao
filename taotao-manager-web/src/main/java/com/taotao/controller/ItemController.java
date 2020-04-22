@@ -1,18 +1,17 @@
 package com.taotao.controller;
 
 import com.taotao.pojo.LayuiTbItem;
+import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemCatResult;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 
 @Controller
 @RequestMapping("/item")
@@ -29,8 +28,27 @@ public class ItemController {
     @ResponseBody
     public LayuiTbItem showItem(@RequestParam(value="page") String pageno, @RequestParam (value="limit") String pagesize){
         LayuiTbItem tbItems = itemService.findAllTbItem(pageno,pagesize);
-//        System.out.println("pageno:"+pageno+"||pagesize:"+pagesize);
         return tbItems;
     }
-
+    @RequestMapping("/itemDelete")
+    @ResponseBody
+    public TaotaoResult itemDelete(@RequestBody List<TbItem> tbItem){
+        Date update = new Date();
+        TaotaoResult result = itemService.updateTbItem(tbItem,2,update);
+        return result;
+    }
+    @RequestMapping("/commodityUpperShelves")
+    @ResponseBody
+    public TaotaoResult commodityUpperShelves(@RequestBody List<TbItem> tbItem){
+        Date update = new Date();
+        TaotaoResult result = itemService.updateTbItem(tbItem,1,update);
+        return result;
+    }
+    @RequestMapping("/commodityLowerShelves")
+    @ResponseBody
+    public TaotaoResult commodityLowerShelves(@RequestBody List<TbItem> tbItem){
+        Date update = new Date();
+        TaotaoResult result = itemService.updateTbItem(tbItem,0,update);
+        return result;
+    }
 }

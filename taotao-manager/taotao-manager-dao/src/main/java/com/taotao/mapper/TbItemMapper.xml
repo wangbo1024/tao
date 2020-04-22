@@ -13,10 +13,16 @@
     <select id="findAllTbItem" resultType="com.taotao.pojo.TbItem">
         SELECT * FROM tbitem LIMIT #{start},#{size}
     </select>
-    <!--<select id="findSearchTbItem" resultType="com.taotao.pojo.TbItem">
-        SELECT * FROM tbitem WHERE title LIKE "%${}%"
+    <update id="updateTbItem">
+        UPDATE tbitem SET status = #{type}, updated = #{update}
+        <where>
+            <foreach collection="ids" open="id IN (" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+
+    <select id="showZtree" resultType="com.taotao.pojo.TbItemCatResult">
+        SELECT * FROM tbitemcat WHERE parentId = #{id}
     </select>
-    <select id="findSearchTbItemsCount" resultType="java.lang.Integer">
-        SELECT COUNT(id) FROM tbitem
-    </select>-->
 </mapper>

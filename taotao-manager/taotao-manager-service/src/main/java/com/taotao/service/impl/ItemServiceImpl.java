@@ -2,14 +2,14 @@ package com.taotao.service.impl;
 
 import com.taotao.mapper.TbItemMapper;
 import com.taotao.pojo.LayuiTbItem;
+import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbItemCatResult;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -37,6 +37,35 @@ public class ItemServiceImpl implements ItemService {
         layui.setMsg("");
         layui.setData(tbItems);
         return layui;
+    }
+
+    @Override
+    public TaotaoResult updateTbItem(List<TbItem> tbItem, int type, Date update) {
+        if (tbItem.size() <= 0){
+            return TaotaoResult.build(500,"请先选择商品，在操作",null);
+        }
+        List<Long> ids = new ArrayList<Long>();
+        for (TbItem tbItems : tbItem) {
+            ids.add(tbItems.getId());
+        }
+        int count = itemMapper.updateTbItem(ids,type,update);
+        if (count > 0 && type == 0){
+            return TaotaoResult.build(200,"商品下架成功",null);
+        } else if (count > 0 && type == 1){
+            return TaotaoResult.build(200,"商品上架成功",null);
+        } else if (count > 0 && type == 2){
+            return TaotaoResult.build(200,"商品删除成功",null);
+        }
+        return TaotaoResult.build(500,"商品修改失败",null);
+    }
+
+    @Override
+    public List<TbItemCatResult> showZtree(Long id) {
+        if (id == null || id == 0){
+            id = 0l;
+        }
+        List<TbItemCatResult> result = itemMapper.showZtree(id);
+        return result;
     }
 
 
