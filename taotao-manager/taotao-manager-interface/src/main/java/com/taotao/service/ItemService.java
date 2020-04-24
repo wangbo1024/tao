@@ -29,7 +29,5 @@ public interface ItemService {
      */
     TaotaoResult updateTbItem(List<TbItem> tbItem, int type, Date update);
 
-    List<TbItemCatResult> showZtree(Long id);
-
     LayuiTbItem searchItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cId);
 }

@@ -1,6 +1,7 @@
 package com.taotao.controller;
 
 import com.taotao.pojo.TbItemCatResult;
+import com.taotao.service.ItemCatService;
 import com.taotao.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,7 @@ import java.util.List;
 @RequestMapping("/itemCat")
 public class ItemCatController {
     @Autowired
-    private ItemService itemService;
+    private ItemCatService itemService;
     /**
      * http://localhost:8081/itemCat/showZtree
      */

@@ -13,12 +13,12 @@ public class LayuiTbItem implements Serializable {
     private int code;
     private String msg;
     private Integer count;
-    private List<TbItem> data;
+    private List<?> data;
 
     public LayuiTbItem() {
     }
 
-    public LayuiTbItem(int code, String msg, Integer count, List<TbItem> data) {
+    public LayuiTbItem(int code, String msg, Integer count, List<?> data) {
 
         this.code = code;
         this.msg = msg;
@@ -60,11 +60,11 @@ public class LayuiTbItem implements Serializable {
         this.count = count;
     }
 
-    public List<TbItem> getData() {
+    public List<?> getData() {
         return data;
     }
 
-    public void setData(List<TbItem> data) {
+    public void setData(List<?> data) {
         this.data = data;
     }
 }
