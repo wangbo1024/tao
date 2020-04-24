@@ -25,4 +25,25 @@
     <select id="showZtree" resultType="com.taotao.pojo.TbItemCatResult">
         SELECT * FROM tbitemcat WHERE parentId = #{id}
     </select>
+
+    <sql id="search">
+        <where>
+            <if test="title != ''">
+                title LIKE '%${title}%' AND
+            </if>
+                price BETWEEN #{priceMin} AND #{priceMax}
+            <if test="cId != null">
+                AND cId = #{cId}
+            </if>
+        </where>
+    </sql>
+    <select id="searchItemLike" resultType="com.taotao.pojo.TbItem">
+        SELECT * FROM tbitem
+        <include refid="search"></include>
+        LIMIT #{start},#{limit}
+    </select>
+    <select id="searchItemLikeCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM tbitem
+        <include refid="search"></include>
+    </select>
 </mapper>

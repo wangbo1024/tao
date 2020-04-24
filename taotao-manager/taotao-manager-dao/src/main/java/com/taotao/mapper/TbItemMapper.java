@@ -40,4 +40,8 @@ public interface TbItemMapper {
     int updateTbItem(@Param("ids") List<Long> ids,@Param("type") int type,@Param("update") Date update);
 
     List<TbItemCatResult> showZtree(@Param("id") Long id);
+
+    int searchItemLikeCount(@Param("title") String title,@Param("priceMin") Integer priceMin,@Param("priceMax") Integer priceMax,@Param("cId") Long cId);
+
+    List<TbItem> searchItemLike(@Param("start") Integer start,@Param("limit") Integer limit,@Param("title") String title,@Param("priceMin") Integer priceMin,@Param("priceMax") Integer priceMax,@Param("cId") Long cId);
 }

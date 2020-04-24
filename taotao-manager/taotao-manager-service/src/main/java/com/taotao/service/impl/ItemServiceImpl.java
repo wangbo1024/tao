@@ -61,11 +61,24 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<TbItemCatResult> showZtree(Long id) {
-        if (id == null || id == 0){
+        if (id == null){
             id = 0l;
         }
         List<TbItemCatResult> result = itemMapper.showZtree(id);
         return result;
+    }
+
+    @Override
+    public LayuiTbItem searchItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cId) {
+        Integer start = (page - 1) * limit;
+        int count = itemMapper.searchItemLikeCount(title,priceMin,priceMax,cId);
+        List<TbItem> tbItems = itemMapper.searchItemLike(start,limit,title,priceMin,priceMax,cId);
+        LayuiTbItem layui = new LayuiTbItem();
+        layui.setCode(0);
+        layui.setCount(count);
+        layui.setMsg("");
+        layui.setData(tbItems);
+        return layui;
     }
 
 
