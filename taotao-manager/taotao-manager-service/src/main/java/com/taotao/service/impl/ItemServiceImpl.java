@@ -1,20 +1,24 @@
 package com.taotao.service.impl;
 
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
-import com.taotao.pojo.LayuiTbItem;
-import com.taotao.pojo.TaotaoResult;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemCatResult;
+import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
+import com.taotao.utils.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
     @Autowired
     private TbItemMapper itemMapper;
+    @Autowired
+    private TbItemDescMapper tbItemDescMapper;
     @Override
     public TbItem findTbItemById(Long itemId) {
         TbItem tbItem = itemMapper.findTbItemById(itemId);
@@ -76,6 +80,50 @@ public class ItemServiceImpl implements ItemService {
         layui.setMsg("");
         layui.setData(tbItems);
         return layui;
+    }
+
+    @Override
+    public ImageDataResult addImage(String filename, byte[] bytes) {
+        String endpoint = "http://oss-cn-chengdu.aliyuncs.com";
+        String accessKeyId = "LTAI4G9iBuw5JpNUX7R3WiL4";
+        String accessKeySecret = "8DvJXb9KFUiHwax09rKPZaxZYqg0va";
+        String bucketName = "2016122131";
+        String objectName = "images/";
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
+        ossClient.putObject(bucketName,objectName+filename,bis);
+        ImageDataResult result = new ImageDataResult();
+        result.setCode(0);
+        result.setMsg("");
+        ImageData data = new ImageData();
+        data.setSrc(bucketName+objectName+filename);
+        result.setData(data);
+        return result;
+    }
+
+    @Override
+    public TaotaoResult addItem(TbItem tbItem, String itemDesc) {
+        /*添加商品基本信息*/
+        long itemId = IDUtils.genItemId();
+        tbItem.setId(itemId);
+        tbItem.setStatus((byte)1);
+        Date date = new Date();
+        tbItem.setCreated(date);
+        tbItem.setUpdated(date);
+        int i = itemMapper.addTbItem(tbItem);
+        if (i <= 0){
+            return TaotaoResult.build(500,"添加商品基本信息失败");
+        }
+        TbItemDesc tbItemDesc = new TbItemDesc();
+        tbItemDesc.setItemId(itemId);
+        tbItemDesc.setItemDesc(itemDesc);
+        tbItemDesc.setCreated(date);
+        tbItemDesc.setUpdated(date);
+        int j = tbItemDescMapper.addTbItemDesc(tbItemDesc);
+        if (j <= 0){
+            return TaotaoResult.build(500,"添加商品描述信息失败");
+        }
+        return TaotaoResult.build(200,"添加商品信息成功");
     }
 
 

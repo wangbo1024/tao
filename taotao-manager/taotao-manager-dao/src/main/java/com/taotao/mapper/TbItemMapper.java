@@ -44,4 +44,6 @@ public interface TbItemMapper {
     int searchItemLikeCount(@Param("title") String title,@Param("priceMin") Integer priceMin,@Param("priceMax") Integer priceMax,@Param("cId") Long cId);
 
     List<TbItem> searchItemLike(@Param("start") Integer start,@Param("limit") Integer limit,@Param("title") String title,@Param("priceMin") Integer priceMin,@Param("priceMax") Integer priceMax,@Param("cId") Long cId);
+
+    int addTbItem(TbItem tbItem);
 }

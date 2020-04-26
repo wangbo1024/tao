@@ -4,15 +4,19 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.taotao.mapper.TbItemMapper">
+
     <select id="findTbItemById" resultType="com.taotao.pojo.TbItem">
         SELECT * FROM tbitem WHERE id = #{id}
     </select>
+
     <select id="findTbItemsCount" resultType="java.lang.Integer">
         SELECT COUNT(id) FROM tbitem
     </select>
+
     <select id="findAllTbItem" resultType="com.taotao.pojo.TbItem">
         SELECT * FROM tbitem LIMIT #{start},#{size}
     </select>
+
     <update id="updateTbItem">
         UPDATE tbitem SET status = #{type}, updated = #{update}
         <where>
@@ -42,8 +46,14 @@
         <include refid="search"></include>
         LIMIT #{start},#{limit}
     </select>
+
     <select id="searchItemLikeCount" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM tbitem
         <include refid="search"></include>
     </select>
+
+    <insert id="addTbItem">
+        INSERT INTO tbitem (id, title, sellPoint, price, num, barcode, image, cId, created, updated)
+        VALUES (#{id},#{title},#{sellPoint},#{price},#{num},#{barcode},#{image},#{cId},#{created},#{updated});
+    </insert>
 </mapper>

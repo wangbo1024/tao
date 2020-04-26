@@ -1,9 +1,6 @@
 package com.taotao.service;
 
-import com.taotao.pojo.LayuiTbItem;
-import com.taotao.pojo.TaotaoResult;
-import com.taotao.pojo.TbItem;
-import com.taotao.pojo.TbItemCatResult;
+import com.taotao.pojo.*;
 
 import java.util.Date;
 import java.util.List;
@@ -30,4 +27,8 @@ public interface ItemService {
     TaotaoResult updateTbItem(List<TbItem> tbItem, int type, Date update);
 
     LayuiTbItem searchItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cId);
+
+    ImageDataResult addImage(String filename, byte[] bytes);
+
+    TaotaoResult addItem(TbItem tbItem, String itemDesc);
 }
