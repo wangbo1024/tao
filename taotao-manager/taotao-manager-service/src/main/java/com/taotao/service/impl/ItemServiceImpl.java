@@ -96,7 +96,7 @@ public class ItemServiceImpl implements ItemService {
         result.setCode(0);
         result.setMsg("");
         ImageData data = new ImageData();
-        data.setSrc(bucketName+objectName+filename);
+        data.setSrc("https://2016122131.oss-cn-chengdu.aliyuncs.com/images/"+filename);
         result.setData(data);
         return result;
     }
