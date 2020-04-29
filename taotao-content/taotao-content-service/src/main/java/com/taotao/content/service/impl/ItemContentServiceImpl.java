@@ -1,13 +1,17 @@
 package com.taotao.content.service.impl;
 
 import com.taotao.content.service.ItemContentService;
+import com.taotao.content.service.JedisClient;
 import com.taotao.mapper.TbContentCategoryMapper;
 import com.taotao.mapper.TbContentMapper;
 import com.taotao.pojo.Ad1Node;
 import com.taotao.pojo.LayuiTbItem;
 import com.taotao.pojo.TbContent;
 import com.taotao.pojo.TbItemCatResult;
+import com.taotao.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,7 +23,10 @@ public class ItemContentServiceImpl implements ItemContentService {
     private TbContentCategoryMapper categoryMapper;
     @Autowired
     private TbContentMapper contentMapper;
-
+    @Autowired
+    private JedisClient jedisClient;
+    @Value("Ad1Node")
+    private String Ad1Node;
     /**
      * 展示TbContentCategory树形分类
      * @param cId
@@ -86,9 +93,17 @@ public class ItemContentServiceImpl implements ItemContentService {
         result.setCount(count);
         List<TbContent> data = contentMapper.findTbContentByPage(categoryId, (page - 1) * limit, limit);
         result.setData(data);
+        jedisClient.del(Ad1Node);
         return result;
     }
 
+    /**
+     * 添加Tbcontent内容数据
+     * @param tbContent
+     * @param page
+     * @param limit
+     * @return
+     */
     @Override
     public LayuiTbItem addContent(TbContent tbContent, Integer page, Integer limit) {
         LayuiTbItem result = new LayuiTbItem();
@@ -105,11 +120,21 @@ public class ItemContentServiceImpl implements ItemContentService {
         result.setCount(count);
         List<TbContent> data = contentMapper.findTbContentByPage(categoryId, (page - 1) * limit, limit);
         result.setData(data);
+        jedisClient.del(Ad1Node);
         return result;
     }
 
+    /**
+     * 前端页面广告位展示
+     * @return
+     */
     @Override
     public List<Ad1Node> showAd1Node() {
+        String json = jedisClient.get(Ad1Node);
+        if (StringUtils.isNotBlank(json)){
+            List<Ad1Node> list = JsonUtils.jsonToPojo(json, List.class);
+            return list;
+        }
         List<Ad1Node> result = new ArrayList<Ad1Node>();
         List<TbContent> tbContents = contentMapper.findTbContentByPage(89L, 0, 10);
         for (TbContent tbContent : tbContents) {
@@ -124,6 +149,7 @@ public class ItemContentServiceImpl implements ItemContentService {
             ad1Node.setHeightB(240);
             result.add(ad1Node);
         }
+        jedisClient.set("Ad1Node",JsonUtils.objectToJson(result));
         return result;
     }
 
