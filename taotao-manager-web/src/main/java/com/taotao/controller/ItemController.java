@@ -115,10 +115,16 @@ public class ItemController {
         return null;
     }
 
+    /**
+     * 添加商品信息
+     * @param tbItem
+     * @param itemDesc
+     * @return
+     */
     @RequestMapping("/addItem")
     @ResponseBody
-    public TaotaoResult addItem(TbItem tbItem,String itemDesc){
-        TaotaoResult result = itemService.addItem(tbItem,itemDesc);
+    public TaotaoResult addItem(TbItem tbItem, String itemDesc,@RequestParam("paramKeyIds[]") String[] paramKeyIds,@RequestParam("paramValue[]") String[] paramValue){
+        TaotaoResult result = itemService.addItem(tbItem,itemDesc,paramKeyIds,paramValue);
         return result;
     }
 }

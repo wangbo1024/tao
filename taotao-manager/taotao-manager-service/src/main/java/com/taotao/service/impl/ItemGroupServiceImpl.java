@@ -14,6 +14,12 @@ import java.util.List;
 public class ItemGroupServiceImpl implements ItemGroupService {
     @Autowired
     private TbItemParamItemMapper tbItemParamItemMapper;
+
+    /**
+     * 根据cId查询商品规格参数组
+     * @param cId
+     * @return
+     */
     @Override
     public TaotaoResult findItemGroup(Long cId) {
         List<ItemParamGroup> groupList = tbItemParamItemMapper.findParamGroupByCId(cId);

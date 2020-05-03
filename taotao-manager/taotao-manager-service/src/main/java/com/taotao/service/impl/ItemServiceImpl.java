@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.taotao.mapper.TbItemDescMapper;
 import com.taotao.mapper.TbItemMapper;
+import com.taotao.mapper.TbItemParamMapper;
 import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
 import com.taotao.utils.IDUtils;
@@ -19,12 +20,26 @@ public class ItemServiceImpl implements ItemService {
     private TbItemMapper itemMapper;
     @Autowired
     private TbItemDescMapper tbItemDescMapper;
+    @Autowired
+    private TbItemParamMapper itemParamMapper;
+
+    /**
+     * 根据商品id查询商品信息
+     * @param itemId
+     * @return
+     */
     @Override
     public TbItem findTbItemById(Long itemId) {
         TbItem tbItem = itemMapper.findTbItemById(itemId);
         return tbItem;
     }
 
+    /**
+     * 查询所有商品信息并分页
+     * @param pageno 当前页码
+     * @param pagesize  每页显示的数据条数
+     * @return
+     */
     @Override
     public LayuiTbItem findAllTbItem(String pageno, String pagesize) {
         /*当前页码*/
@@ -43,6 +58,13 @@ public class ItemServiceImpl implements ItemService {
         return layui;
     }
 
+    /**
+     * 修改商品的状态
+     * @param tbItem  需要修改的商品
+     * @param type  商品的状态
+     * @param update   更新时间
+     * @return
+     */
     @Override
     public TaotaoResult updateTbItem(List<TbItem> tbItem, int type, Date update) {
         if (tbItem.size() <= 0){
@@ -63,6 +85,16 @@ public class ItemServiceImpl implements ItemService {
         return TaotaoResult.build(500,"商品修改失败",null);
     }
 
+    /**
+     * 多条件搜索商品
+     * @param page 当前页码
+     * @param limit 每页显示商品数量
+     * @param title 商品标题信息
+     * @param priceMin 价格区间最低
+     * @param priceMax 价格区间最高
+     * @param cId 商品的分类id
+     * @return
+     */
     @Override
     public LayuiTbItem searchItem(Integer page, Integer limit, String title, Integer priceMin, Integer priceMax, Long cId) {
         if (priceMin == null){
@@ -82,12 +114,18 @@ public class ItemServiceImpl implements ItemService {
         return layui;
     }
 
+    /**
+     * 添加商品图片
+     * @param filename
+     * @param bytes
+     * @return
+     */
     @Override
     public ImageDataResult addImage(String filename, byte[] bytes) {
         String endpoint = "http://oss-cn-chengdu.aliyuncs.com";
-        String accessKeyId = "LTAI4G9iBuw5JpNUX7R3WiL4";
-        String accessKeySecret = "8DvJXb9KFUiHwax09rKPZaxZYqg0va";
-        String bucketName = "2016122131";
+        String accessKeyId = "";
+        String accessKeySecret = "";
+        String bucketName = "clive123";
         String objectName = "images/";
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
@@ -96,13 +134,19 @@ public class ItemServiceImpl implements ItemService {
         result.setCode(0);
         result.setMsg("");
         ImageData data = new ImageData();
-        data.setSrc("https://2016122131.oss-cn-chengdu.aliyuncs.com/images/"+filename);
+        data.setSrc("https://"+bucketName+".oss-cn-chengdu.aliyuncs.com/images/"+filename);
         result.setData(data);
         return result;
     }
 
+    /**
+     * 添加商品信息、商品描述信息以及商品规格参数信息
+     * @param tbItem
+     * @param itemDesc
+     * @return
+     */
     @Override
-    public TaotaoResult addItem(TbItem tbItem, String itemDesc) {
+    public TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValues) {
         /*添加商品基本信息*/
         long itemId = IDUtils.genItemId();
         tbItem.setId(itemId);
@@ -122,6 +166,17 @@ public class ItemServiceImpl implements ItemService {
         int j = tbItemDescMapper.addTbItemDesc(tbItemDesc);
         if (j <= 0){
             return TaotaoResult.build(500,"添加商品描述信息失败");
+        }
+        /*添加商品对应的规格参数信息*/
+        int count = 0;
+        for (int k = 0; k < paramKeyIds.length; k++) {
+            String paramKeyId = paramKeyIds[k];
+            int paramId = Integer.parseInt(paramKeyId);
+            String paramValue = paramValues[k];
+            count = itemParamMapper.addTbItemParamValue(itemId,paramId,paramValue);
+        }
+        if (count <= 0){
+            return TaotaoResult.build(500,"添加商品规格参数信息失败");
         }
         return TaotaoResult.build(200,"添加商品信息成功");
     }

@@ -15,8 +15,11 @@ import java.util.List;
 public class ItemCatController {
     @Autowired
     private ItemCatService itemService;
+
     /**
      * http://localhost:8081/itemCat/showZtree
+     * @param id
+     * @return
      */
     @RequestMapping("/showZtree")
     @ResponseBody
