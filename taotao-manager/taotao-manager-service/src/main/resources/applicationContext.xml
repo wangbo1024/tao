@@ -65,7 +65,7 @@
         </tx:attributes>
     </tx:advice>
     <!-- 切面 -->
-    <aop:config>
+    <aop:config  proxy-target-class="true">
         <aop:advisor advice-ref="txAdvice"
                      pointcut="execution(* com.taotao.service.*.*(..))" />
     </aop:config>

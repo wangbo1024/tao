@@ -1,5 +1,6 @@
 package com.taotao.mapper;
 
+import com.taotao.pojo.SearchItem;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemCatResult;
 import org.apache.ibatis.annotations.Param;
@@ -46,4 +47,6 @@ public interface TbItemMapper {
     List<TbItem> searchItemLike(@Param("start") Integer start,@Param("limit") Integer limit,@Param("title") String title,@Param("priceMin") Integer priceMin,@Param("priceMax") Integer priceMax,@Param("cId") Long cId);
 
     int addTbItem(TbItem tbItem);
+
+    List<SearchItem> findSearchItemAll();
 }

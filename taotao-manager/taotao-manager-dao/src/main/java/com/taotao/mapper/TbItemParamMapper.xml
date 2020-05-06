@@ -6,4 +6,16 @@
     <insert id="addTbItemParamValue">
         INSERT INTO tbitemparamvalue (itemId, paramId, paramValue) VALUE (#{itemId},#{paramId},#{paramValue});
     </insert>
+
+    <insert id="addTbItemParamGroup">
+        INSERT INTO tbitemparamgroup (groupName, itemCatId) VALUE (#{groupName},#{itemCatId})
+    </insert>
+
+    <select id="findTbItemParamGroupId" resultType="int">
+        SELECT id FROM tbitemparamgroup WHERE groupName = #{groupName} AND itemCatId = #{itemCatId}
+    </select>
+
+    <insert id="addTbItemParamKey">
+        INSERT INTO tbitemparamkey (paramName, groupId) VALUE (#{paramName},#{groupId})
+    </insert>
 </mapper>

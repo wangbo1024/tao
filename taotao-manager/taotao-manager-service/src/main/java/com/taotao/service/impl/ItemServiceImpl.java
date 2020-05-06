@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -115,26 +118,37 @@ public class ItemServiceImpl implements ItemService {
     }
 
     /**
-     * 添加商品图片
+     * 上传图片
      * @param filename
      * @param bytes
      * @return
      */
     @Override
     public ImageDataResult addImage(String filename, byte[] bytes) {
-        String endpoint = "http://oss-cn-chengdu.aliyuncs.com";
-        String accessKeyId = "";
-        String accessKeySecret = "";
-        String bucketName = "clive123";
-        String objectName = "images/";
+        Properties properties = new Properties();
+        try {
+            FileInputStream fis = new FileInputStream("E:\\tool\\阿里云OSS.txt");
+            properties.load(fis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String endpoint = properties.getProperty("endpoint");
+        String accessKeyId = properties.getProperty("accessKeyId");
+        String accessKeySecret = properties.getProperty("accessKeySecret");
+        String bucketName = properties.getProperty("bucketName");
+        String objectName = properties.getProperty("objectName");
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-        ossClient.putObject(bucketName,objectName+filename,bis);
+        //随机生成一个字符串   本身的名字 只要.jpg 随机字符串.jpg
+        String fileName = IDUtils.genImageName()+filename.substring(filename.lastIndexOf("."));
+        ossClient.putObject(bucketName,objectName+fileName,bis);
         ImageDataResult result = new ImageDataResult();
         result.setCode(0);
         result.setMsg("");
         ImageData data = new ImageData();
-        data.setSrc("https://"+bucketName+".oss-cn-chengdu.aliyuncs.com/images/"+filename);
+        data.setSrc("https://"+bucketName+".oss-cn-chengdu.aliyuncs.com/images/"+fileName);
         result.setData(data);
         return result;
     }
@@ -179,6 +193,12 @@ public class ItemServiceImpl implements ItemService {
             return TaotaoResult.build(500,"添加商品规格参数信息失败");
         }
         return TaotaoResult.build(200,"添加商品信息成功");
+    }
+
+    @Override
+    public List<SearchItem> findSearchItemAll() {
+        List<SearchItem> searchItems = itemMapper.findSearchItemAll();
+        return searchItems;
     }
 
 

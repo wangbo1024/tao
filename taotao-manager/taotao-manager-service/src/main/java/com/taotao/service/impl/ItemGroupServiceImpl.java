@@ -1,6 +1,7 @@
 package com.taotao.service.impl;
 
 import com.taotao.mapper.TbItemParamItemMapper;
+import com.taotao.mapper.TbItemParamMapper;
 import com.taotao.pojo.ItemParamGroup;
 import com.taotao.pojo.ItemParamKey;
 import com.taotao.pojo.TaotaoResult;
@@ -14,6 +15,8 @@ import java.util.List;
 public class ItemGroupServiceImpl implements ItemGroupService {
     @Autowired
     private TbItemParamItemMapper tbItemParamItemMapper;
+    @Autowired
+    private TbItemParamMapper tbItemParamMapper;
 
     /**
      * 根据cId查询商品规格参数组
@@ -34,5 +37,24 @@ public class ItemGroupServiceImpl implements ItemGroupService {
             }
         }
         return TaotaoResult.build(200,"有规格参数模板",groupList);
+    }
+
+    @Override
+    public TaotaoResult addGroup(Long cId, String params) {
+        String[] clives = params.split("clive");
+        int count = 0;
+        for (int i = 0; i < clives.length; i++) {
+            String[] group = clives[i].split(",");
+            tbItemParamMapper.addTbItemParamGroup(cId,group[0]);
+            int groupId = tbItemParamMapper.findTbItemParamGroupId(cId,group[0]);
+            for (int j = 1; j < group.length; j++) {
+                tbItemParamMapper.addTbItemParamKey(group[j],groupId);
+                count ++;
+            }
+        }
+        if (count <= 0){
+            return TaotaoResult.build(500,"规格参数模板添加失败");
+        }
+        return TaotaoResult.build(200,"规格参数模板添加成功");
     }
 }

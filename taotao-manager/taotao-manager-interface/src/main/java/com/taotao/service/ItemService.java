@@ -31,4 +31,6 @@ public interface ItemService {
     ImageDataResult addImage(String filename, byte[] bytes);
 
     TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValue);
+
+    List<SearchItem> findSearchItemAll();
 }
