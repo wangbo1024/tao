@@ -32,5 +32,4 @@ public interface ItemService {
 
     TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValue);
 
-    List<SearchItem> findSearchItemAll();
 }

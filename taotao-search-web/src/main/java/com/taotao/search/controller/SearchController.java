@@ -1,6 +1,5 @@
 package com.taotao.search.controller;
 
-import com.taotao.pojo.SearchItem;
 import com.taotao.pojo.SearchItemResult;
 import com.taotao.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,14 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
+    /**
+     * 前端搜索
+     * @param q 用户输入的搜索条件
+     * @param page 当前页面
+     * @param model
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping("/search")
     public String showSearch(@RequestParam("q")String q, @RequestParam(value = "page",defaultValue = "1") Integer page, Model model) throws UnsupportedEncodingException {
         String query = new String(q.getBytes("iso-8859-1"),"utf-8");

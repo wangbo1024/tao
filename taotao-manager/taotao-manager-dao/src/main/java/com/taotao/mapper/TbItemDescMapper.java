@@ -5,4 +5,6 @@ import com.taotao.pojo.TbItemDesc;
 public interface TbItemDescMapper {
 
     int addTbItemDesc(TbItemDesc tbItemDesc);
+
+    TbItemDesc getItemDescByItemId(Long itemId);
 }

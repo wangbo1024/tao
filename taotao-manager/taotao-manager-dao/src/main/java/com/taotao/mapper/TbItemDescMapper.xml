@@ -7,4 +7,8 @@
         INSERT INTO tbitemdesc (itemId, itemDesc, created, updated)
         VALUE (#{itemId},#{itemDesc},#{created},#{updated})
     </insert>
+
+    <select id="getItemDescByItemId" resultType="com.taotao.pojo.TbItemDesc">
+        SELECT * FROM tbitemdesc WHERE itemId = #{itemId}
+    </select>
 </mapper>

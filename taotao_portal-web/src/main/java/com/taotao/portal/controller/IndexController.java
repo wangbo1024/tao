@@ -20,6 +20,12 @@ public class IndexController {
     private ItemCatService itemCatService;
     @Autowired
     private ItemContentService itemContentService;
+
+    /**
+     * 前端首页广告展示
+     * @param model
+     * @return
+     */
     @RequestMapping("/index")
     public String showIndex(Model model){
         List<Ad1Node> ad1Nodes = itemContentService.showAd1Node();
@@ -27,6 +33,11 @@ public class IndexController {
         model.addAttribute("ad1",ad1);
         return "index";
     }
+
+    /**
+     * 前端页面树形分类展示
+     * @return
+     */
     @RequestMapping("/itemcat/all")
     @ResponseBody
     public String showItemCat(){

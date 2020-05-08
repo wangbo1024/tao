@@ -9,8 +9,11 @@ import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
 import com.taotao.utils.IDUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
+import javax.jms.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,6 +28,10 @@ public class ItemServiceImpl implements ItemService {
     private TbItemDescMapper tbItemDescMapper;
     @Autowired
     private TbItemParamMapper itemParamMapper;
+    @Autowired
+    private JmsTemplate jmsTemplate;
+    @Autowired
+    private Destination destination;
 
     /**
      * 根据商品id查询商品信息
@@ -162,7 +169,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValues) {
         /*添加商品基本信息*/
-        long itemId = IDUtils.genItemId();
+        final long itemId = IDUtils.genItemId();
         tbItem.setId(itemId);
         tbItem.setStatus((byte)1);
         Date date = new Date();
@@ -172,6 +179,23 @@ public class ItemServiceImpl implements ItemService {
         if (i <= 0){
             return TaotaoResult.build(500,"添加商品基本信息失败");
         }
+        /**
+         * 意味着前面都没有报错 添加商品成功了 我们应该做solr索引同步了
+         * 意味着他应该发布一个消息到消息队列里面去
+         * 提供给 search-service 来使用
+         * 为什么发送id过去呢 ？
+         * 因为 我发送了id过去  search-service可以根据id查询到商品信息
+         * 就会得到商品对象  使用solrService。add（商品对象）;
+         *
+         */
+        jmsTemplate.send(destination, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                TextMessage textMessage = session.createTextMessage();
+                textMessage.setText(itemId+"");
+                return textMessage;
+            }
+        });
         TbItemDesc tbItemDesc = new TbItemDesc();
         tbItemDesc.setItemId(itemId);
         tbItemDesc.setItemDesc(itemDesc);
@@ -194,12 +218,4 @@ public class ItemServiceImpl implements ItemService {
         }
         return TaotaoResult.build(200,"添加商品信息成功");
     }
-
-    @Override
-    public List<SearchItem> findSearchItemAll() {
-        List<SearchItem> searchItems = itemMapper.findSearchItemAll();
-        return searchItems;
-    }
-
-
 }
