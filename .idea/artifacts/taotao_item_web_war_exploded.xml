@@ -7,9 +7,16 @@
           <element id="module-output" name="taotao-item-web" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="taotao-item-interface-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="taotao-item-interface" />
+          <element id="archive" name="taotao-manager-interface-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="taotao-manager-interface" />
           </element>
+          <element id="archive" name="taotao-manager-pojo-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="taotao-manager-pojo" />
+          </element>
+          <element id="library" level="project" name="Maven: org.junit.jupiter:junit-jupiter-api:5.7.0-M1" />
+          <element id="library" level="project" name="Maven: org.apiguardian:apiguardian-api:1.1.0" />
+          <element id="library" level="project" name="Maven: org.opentest4j:opentest4j:1.2.0" />
+          <element id="library" level="project" name="Maven: org.junit.platform:junit-platform-commons:1.7.0-M1" />
           <element id="archive" name="taotao-common-1.0-SNAPSHOT.jar">
             <element id="module-output" name="taotao-common" />
           </element>
@@ -25,9 +32,6 @@
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.6" />
           <element id="library" level="project" name="Maven: org.quartz-scheduler:quartz:2.2.2" />
           <element id="library" level="project" name="Maven: c3p0:c3p0:0.9.1.1" />
-          <element id="archive" name="taotao-manager-pojo-1.0-SNAPSHOT.jar">
-            <element id="module-output" name="taotao-manager-pojo" />
-          </element>
           <element id="library" level="project" name="Maven: jstl:jstl:1.2" />
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.2.4.RELEASE" />

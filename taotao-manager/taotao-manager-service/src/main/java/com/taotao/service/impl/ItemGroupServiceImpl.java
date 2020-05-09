@@ -41,6 +41,9 @@ public class ItemGroupServiceImpl implements ItemGroupService {
 
     @Override
     public TaotaoResult addGroup(Long cId, String params) {
+        if (params == null || params.contains("")){
+            return TaotaoResult.build(500,"请输入规格参数信息");
+        }
         String[] clives = params.split("clive");
         int count = 0;
         for (int i = 0; i < clives.length; i++) {

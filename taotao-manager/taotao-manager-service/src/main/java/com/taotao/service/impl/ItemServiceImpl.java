@@ -7,7 +7,10 @@ import com.taotao.mapper.TbItemMapper;
 import com.taotao.mapper.TbItemParamMapper;
 import com.taotao.pojo.*;
 import com.taotao.service.ItemService;
+import com.taotao.service.JedisClient;
 import com.taotao.utils.IDUtils;
+import com.taotao.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -22,6 +25,9 @@ import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
+    private final int max = 1200;
+    private final int min = 600;
+    private Random random = new Random();
     @Autowired
     private TbItemMapper itemMapper;
     @Autowired
@@ -32,6 +38,8 @@ public class ItemServiceImpl implements ItemService {
     private JmsTemplate jmsTemplate;
     @Autowired
     private Destination destination;
+    @Autowired
+    private JedisClient jedisClient;
 
     /**
      * 根据商品id查询商品信息
@@ -40,7 +48,24 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public TbItem findTbItemById(Long itemId) {
+        int seconds = random.nextInt(max)%(max-min+1) + min;
+        String tbItemBasicData = jedisClient.get("tbItemBasicData");
+        if (StringUtils.isNotBlank(tbItemBasicData)){
+            if (tbItemBasicData.equals("null")){
+                return null;
+            }
+            TbItem tbItem = JsonUtils.jsonToPojo(tbItemBasicData, TbItem.class);
+            jedisClient.expire("tbItemBasicData",seconds);
+            return tbItem;
+        }
         TbItem tbItem = itemMapper.findTbItemById(itemId);
+        if (tbItem == null){
+            jedisClient.set("tbItemBasicData","null");
+            jedisClient.expire("tbItemBasicData",180);
+        }else {
+            jedisClient.set("tbItemBasicData",JsonUtils.objectToJson(tbItem));
+            jedisClient.expire("tbItemBasicData",seconds);
+        }
         return tbItem;
     }
 
@@ -217,5 +242,28 @@ public class ItemServiceImpl implements ItemService {
             return TaotaoResult.build(500,"添加商品规格参数信息失败");
         }
         return TaotaoResult.build(200,"添加商品信息成功");
+    }
+
+    @Override
+    public TbItemDesc getItemDescByItemId(Long itemId) {
+        int seconds = random.nextInt(max)%(max-min+1) + min;
+        String itemDesc = jedisClient.get("itemDesc");
+        if (StringUtils.isNotBlank(itemDesc)){
+            if (itemDesc.equals("null")){
+                return null;
+            }
+            TbItemDesc tbItemDesc = JsonUtils.jsonToPojo(itemDesc, TbItemDesc.class);
+            jedisClient.expire("itemDesc",seconds);
+            return tbItemDesc;
+        }
+        TbItemDesc tbItemDesc = tbItemDescMapper.getItemDescByItemId(itemId);
+        if (tbItemDesc == null){
+            jedisClient.set("itemDesc","null");
+            jedisClient.expire("itemDesc",180);
+        }else {
+            jedisClient.set("itemDesc",JsonUtils.objectToJson(tbItemDesc));
+            jedisClient.expire("itemDesc",seconds);
+        }
+        return tbItemDesc;
     }
 }

@@ -32,4 +32,5 @@ public interface ItemService {
 
     TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValue);
 
+    TbItemDesc getItemDescByItemId(Long itemId);
 }

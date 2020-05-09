@@ -9,7 +9,6 @@
         <module name="taotao-common" />
         <module name="taotao-content-interface" />
         <module name="taotao-content-service" />
-        <module name="taotao-item-interface" />
         <module name="taotao-item-service" />
         <module name="taotao-item-web" />
         <module name="taotao-manager-dao" />
