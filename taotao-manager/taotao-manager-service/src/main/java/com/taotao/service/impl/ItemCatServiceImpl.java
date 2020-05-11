@@ -23,6 +23,12 @@ public class ItemCatServiceImpl implements ItemCatService {
     private JedisClient jedisClient;
     @Value("ITEMCAT")
     private String ITEMCAT;
+
+    /**
+     * 展示商品分类树形结构
+     * @param id
+     * @return
+     */
     @Override
     public List<TbItemCatResult> showZtree(Long id) {
         if (id == null){
@@ -32,6 +38,10 @@ public class ItemCatServiceImpl implements ItemCatService {
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ItemCatDataResult showItemCat() {
         ItemCatDataResult result = new ItemCatDataResult();

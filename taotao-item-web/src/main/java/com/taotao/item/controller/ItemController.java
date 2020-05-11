@@ -30,4 +30,10 @@ public class ItemController {
         TbItemDesc tbItemDesc = itemService.getItemDescByItemId(itemId);
         return tbItemDesc.getItemDesc();
     }
+    @RequestMapping("/param/{itemId}")
+    @ResponseBody
+    public String showItemGroup(@PathVariable Long itemId) {
+        String data = itemService.findItemGroupAndKeyAndValue(itemId);
+        return data;
+    }
 }

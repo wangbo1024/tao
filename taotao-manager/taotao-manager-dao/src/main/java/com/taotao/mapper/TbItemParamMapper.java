@@ -1,6 +1,9 @@
 package com.taotao.mapper;
 
+import com.taotao.pojo.TbItemParamGroup;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TbItemParamMapper {
 
@@ -11,4 +14,6 @@ public interface TbItemParamMapper {
     int findTbItemParamGroupId(@Param("itemCatId") Long itemCatId,@Param("groupName") String groupName);
 
     void addTbItemParamKey(@Param("paramName") String paramName,@Param("groupId") int groupId);
+
+    List<TbItemParamGroup> findItemGroupAndKeyAndValue(Long itemId);
 }

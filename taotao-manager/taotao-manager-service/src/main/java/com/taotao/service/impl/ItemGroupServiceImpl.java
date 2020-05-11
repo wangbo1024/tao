@@ -39,11 +39,14 @@ public class ItemGroupServiceImpl implements ItemGroupService {
         return TaotaoResult.build(200,"有规格参数模板",groupList);
     }
 
+    /**
+     * 添加商品规格参数模板
+     * @param cId
+     * @param params
+     * @return
+     */
     @Override
     public TaotaoResult addGroup(Long cId, String params) {
-        if (params == null || params.contains("")){
-            return TaotaoResult.build(500,"请输入规格参数信息");
-        }
         String[] clives = params.split("clive");
         int count = 0;
         for (int i = 0; i < clives.length; i++) {

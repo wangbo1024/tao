@@ -33,4 +33,11 @@ public interface ItemService {
     TaotaoResult addItem(TbItem tbItem, String itemDesc, String[] paramKeyIds, String[] paramValue);
 
     TbItemDesc getItemDescByItemId(Long itemId);
+
+    /**
+     * 根据商品id查询商品规格参数信息
+     * @param itemId
+     * @return
+     */
+    String findItemGroupAndKeyAndValue(Long itemId);
 }

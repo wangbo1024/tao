@@ -76,7 +76,6 @@
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
         </dependency>
-
         <!-- 阿里云oos jar包导入 -->
         <dependency>
             <groupId>com.aliyun.oss</groupId>

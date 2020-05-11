@@ -49,22 +49,22 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public TbItem findTbItemById(Long itemId) {
         int seconds = random.nextInt(max)%(max-min+1) + min;
-        String tbItemBasicData = jedisClient.get("tbItemBasicData");
+        String tbItemBasicData = jedisClient.get("tbItemBasicData:"+itemId);
         if (StringUtils.isNotBlank(tbItemBasicData)){
             if (tbItemBasicData.equals("null")){
                 return null;
             }
             TbItem tbItem = JsonUtils.jsonToPojo(tbItemBasicData, TbItem.class);
-            jedisClient.expire("tbItemBasicData",seconds);
+            jedisClient.expire("tbItemBasicData:"+itemId,seconds);
             return tbItem;
         }
         TbItem tbItem = itemMapper.findTbItemById(itemId);
         if (tbItem == null){
-            jedisClient.set("tbItemBasicData","null");
-            jedisClient.expire("tbItemBasicData",180);
+            jedisClient.set("tbItemBasicData:"+itemId,"null");
+            jedisClient.expire("tbItemBasicData:"+itemId,180);
         }else {
-            jedisClient.set("tbItemBasicData",JsonUtils.objectToJson(tbItem));
-            jedisClient.expire("tbItemBasicData",seconds);
+            jedisClient.set("tbItemBasicData:"+itemId,JsonUtils.objectToJson(tbItem));
+            jedisClient.expire("tbItemBasicData:"+itemId,seconds);
         }
         return tbItem;
     }
@@ -244,26 +244,71 @@ public class ItemServiceImpl implements ItemService {
         return TaotaoResult.build(200,"添加商品信息成功");
     }
 
+    /**
+     * 通过商品ID得到商品的描述信息
+     * @param itemId 商品id
+     * @return  商品描述信息
+     */
     @Override
     public TbItemDesc getItemDescByItemId(Long itemId) {
         int seconds = random.nextInt(max)%(max-min+1) + min;
-        String itemDesc = jedisClient.get("itemDesc");
+        String itemDesc = jedisClient.get("itemDesc:"+itemId);
         if (StringUtils.isNotBlank(itemDesc)){
             if (itemDesc.equals("null")){
                 return null;
             }
             TbItemDesc tbItemDesc = JsonUtils.jsonToPojo(itemDesc, TbItemDesc.class);
-            jedisClient.expire("itemDesc",seconds);
+            jedisClient.expire("itemDesc:"+itemId,seconds);
             return tbItemDesc;
         }
         TbItemDesc tbItemDesc = tbItemDescMapper.getItemDescByItemId(itemId);
         if (tbItemDesc == null){
-            jedisClient.set("itemDesc","null");
-            jedisClient.expire("itemDesc",180);
+            jedisClient.set("itemDesc:"+itemId,"null");
+            jedisClient.expire("itemDesc:"+itemId,180);
         }else {
-            jedisClient.set("itemDesc",JsonUtils.objectToJson(tbItemDesc));
-            jedisClient.expire("itemDesc",seconds);
+            jedisClient.set("itemDesc:"+itemId,JsonUtils.objectToJson(tbItemDesc));
+            jedisClient.expire("itemDesc:"+itemId,seconds);
         }
         return tbItemDesc;
+    }
+
+    @Override
+    public String findItemGroupAndKeyAndValue(Long itemId) {
+        int seconds = random.nextInt(max)%(max-min+1) + min;
+        String itemGroup = jedisClient.get("itemGroup:" + itemId);
+        if (StringUtils.isNotBlank(itemGroup)){
+            if (itemGroup.equals("null")){
+                return null;
+            }
+            String groups = JsonUtils.jsonToPojo(itemGroup, String.class);
+            jedisClient.expire("itemGroup:"+itemId,seconds);
+            return groups;
+        }
+        List<TbItemParamGroup> groups = itemParamMapper.findItemGroupAndKeyAndValue(itemId);
+        StringBuffer sb = new StringBuffer();
+        if (groups == null){
+            jedisClient.set("itemGroup:"+itemId,"null");
+            jedisClient.expire("itemGroup:"+itemId,180);
+        }else {
+            sb.append("<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"Ptable\">\n");
+            sb.append("    <tbody>\n");
+            for (TbItemParamGroup group:groups) {
+                sb.append("        <tr>\n");
+                sb.append("            <th class=\"tdTitle\" colspan=\"2\">"+group.getGroupName()+"</th>\n");
+                sb.append("        </tr>\n");
+                List<TbItemParamKey> paramKeys = group.getParamKeys();
+                for(TbItemParamKey paramKey:paramKeys) {
+                    sb.append("        <tr>\n");
+                    sb.append("            <td class=\"tdTitle\">"+paramKey.getParamName()+"</td>\n");
+                    sb.append("            <td>"+paramKey.getTbItemParamValue().getParamValue()+"</td>\n");
+                    sb.append("        </tr>\n");
+                }
+            }
+            sb.append("    </tbody>\n");
+            sb.append("</table>");
+            jedisClient.set("itemGroup:"+itemId,JsonUtils.objectToJson(sb));
+            jedisClient.expire("itemGroup:"+itemId,seconds);
+        }
+        return sb.toString();
     }
 }
