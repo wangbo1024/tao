@@ -5,10 +5,7 @@
     <file url="file://$PROJECT_DIR$/taotao-content" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-content/taotao-content-interface" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-content/taotao-content-service" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/taotao-item" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-item-web" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/taotao-item/taotao-item-interface" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/taotao-item/taotao-item-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-manager" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-manager-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-manager/taotao-manager-dao" charset="UTF-8" />
@@ -20,6 +17,10 @@
     <file url="file://$PROJECT_DIR$/taotao-search-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-search/taotao-search-interface" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao-search/taotao-search-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/taotao-sso" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/taotao-sso-web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/taotao-sso/taotao-sso-interface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/taotao-sso/taotao-sso-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/taotao_portal-web" charset="UTF-8" />
   </component>
 </project>

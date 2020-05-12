@@ -30,7 +30,7 @@ public class MyMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        TextMessage textMessage = (TextMessage) message;
+        /*TextMessage textMessage = (TextMessage) message;
         try {
             String id = textMessage.getText();
             Long itemId = Long.valueOf(id);
@@ -65,7 +65,7 @@ public class MyMessageListener implements MessageListener {
                     e.printStackTrace();
                 }
             }
-        }
+        }*/
 
     }
 }

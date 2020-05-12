@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.taotao.mapper.TbUserMapper">
+    <insert id="addUser">
+        INSERT INTO tbuser (userName, passWord, phone, email, created, updated)
+          VALUE (#{userName},#{passWord},#{phone},#{email},#{created},#{updated})
+    </insert>
+
+    <select id="findUserByUsername" resultType="int">
+        SELECT count(*) FROM tbuser WHERE userName = #{userName}
+    </select>
+
+    <select id="findUserByPhone"  resultType="int">
+        SELECT count(*) FROM tbuser WHERE phone = #{phone}
+    </select>
+
+    <select id="findUserByEmail"  resultType="int">
+        SELECT count(*) FROM tbuser WHERE email = #{email}
+    </select>
+    <select id="findUserByUsernameAndPassword"  resultType="com.taotao.pojo.TbUser">
+        SELECT * FROM tbuser WHERE userName = #{username} AND passWord = #{password}
+    </select>
+</mapper>

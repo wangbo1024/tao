@@ -55,6 +55,21 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>RELEASE</version>
+        </dependency>
         <!--&lt;!&ndash; 阿里云oos jar包导入 &ndash;&gt;
         <dependency>
             <groupId>com.aliyun.oss</groupId>
@@ -71,5 +86,10 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.1</version>
         </dependency>-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.8.2</version>
+        </dependency>
     </dependencies>
 </project>
