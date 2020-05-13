@@ -111,7 +111,7 @@ public class SsoServiceImpl implements SsoService {
         if (tbUser == null){
             jedisClient.set("USER_INFO"+":"+ token, "null");
             jedisClient.expire("USER_INFO"+":"+ token,seconds);
-            return TaotaoResult.build(400,"登录失败，用户名或密码错误");
+            return TaotaoResult.build(400,"登录失败，用户名或密码错误","null");
         }
         jedisClient.set("USER_INFO"+":"+ token, JsonUtils.objectToJson(tbUser));
         jedisClient.expire("USER_INFO"+":"+ token,seconds);

@@ -3,6 +3,7 @@ package com.taotao.sso.controller;
 import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbUser;
 import com.taotao.service.SsoService;
+import com.taotao.utils.CookieUtils;
 import com.taotao.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +48,7 @@ public class UserController {
     public TaotaoResult login(String userName, String passWord, HttpServletRequest request, HttpServletResponse response){
         TaotaoResult result = ssoService.findUserByUsernameAndPassword(userName,passWord);
         String token = result.getData().toString();
-        Cookie cookie = new Cookie("TT_TOKEN",token);
-        cookie.setDomain("localhost");
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        CookieUtils.setCookie(request,response,"TT_TOKEN",token);
         return result;
     }
 
