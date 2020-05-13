@@ -3,9 +3,17 @@ package com.taotao.sso.controller;
 import com.taotao.pojo.TaotaoResult;
 import com.taotao.pojo.TbUser;
 import com.taotao.service.SsoService;
+import com.taotao.utils.JsonUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/user")
@@ -13,11 +21,17 @@ public class UserController {
     @Autowired
     private SsoService ssoService;
 
-    @RequestMapping(value = "/check/{param}/{type}",method = RequestMethod.GET)
+    @RequestMapping(value = "/check/{param}/{type}",method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public TaotaoResult checkData(@PathVariable("param") String param, @PathVariable("type") Integer type){
+    public Object checkData(@PathVariable("param") String param, @PathVariable("type") Integer type,String callback){
         TaotaoResult result = ssoService.checkData(param,type);
-        return result;
+        if (StringUtils.isNotBlank(callback)){
+            MappingJacksonValue jacksonValue = new MappingJacksonValue(callback);
+            jacksonValue.setJsonpFunction(result.getData().toString());
+            return jacksonValue;
+        }
+        return JsonUtils.objectToJson(result);
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -30,23 +44,39 @@ public class UserController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public TaotaoResult login(String username,String password){
-        TaotaoResult result = ssoService.findUserByUsernameAndPassword(username,password);
+    public TaotaoResult login(String userName, String passWord, HttpServletRequest request, HttpServletResponse response){
+        TaotaoResult result = ssoService.findUserByUsernameAndPassword(userName,passWord);
+        String token = result.getData().toString();
+        Cookie cookie = new Cookie("TT_TOKEN",token);
+        cookie.setDomain("localhost");
+        cookie.setPath("/");
+        response.addCookie(cookie);
         return result;
     }
 
-    @RequestMapping(value = "/token/{token}", method = RequestMethod.GET)
+    @RequestMapping(value = "/token/{token}", produces = MediaType.APPLICATION_JSON_VALUE+";charset=utf-8",
+            method = RequestMethod.GET)
     @ResponseBody
-    public TaotaoResult queryUserMessage(@PathVariable String token){
+    public String queryUserMessage(@PathVariable String token,String callback){
         TaotaoResult result = ssoService.findUserByToken(token);
-        return result;
+        if (StringUtils.isNotBlank(callback)){
+            String strResult = callback +"("+ JsonUtils.objectToJson(result)+");";
+            return strResult;
+        }
+        return JsonUtils.objectToJson(result);
     }
 
-    @RequestMapping(value = "/logout/{token}", method = RequestMethod.GET)
+    @RequestMapping(value = "/logout/{token}", method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
     @ResponseBody
-    public TaotaoResult logout(@PathVariable String token){
+    public Object logout(@PathVariable String token,String callback){
         TaotaoResult result = ssoService.logout(token);
-        return result;
+        if (StringUtils.isNotBlank(callback)){
+            MappingJacksonValue jacksonValue = new MappingJacksonValue(callback);
+            jacksonValue.setJsonpFunction(result.getData().toString());
+            return jacksonValue;
+        }
+        return JsonUtils.objectToJson(result);
     }
 
 
