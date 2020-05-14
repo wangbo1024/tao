@@ -66,7 +66,7 @@ public class SearchServiceImpl implements SearchService {
             //设置高亮的域
             solrQuery.addHighlightField("item_title");
             //设置前缀
-            solrQuery.setHighlightSimplePre("<font style='color:yellow'>");
+            solrQuery.setHighlightSimplePre("<font style='color:red'>");
             //设置后缀
             solrQuery.setHighlightSimplePost("</font>");
             //设置每页开始的索引
@@ -90,6 +90,7 @@ public class SearchServiceImpl implements SearchService {
                 item.setId((String) document.get("id"));
                 item.setCategoryName((String) document.get("item_category_name"));
                 //你取出来的图片也是多张图片
+                String item_image = (String) document.get("item_image");
                 item.setImage((String) document.get("item_image"));
                 item.setPrice((Long) document.get("item_price"));
                 item.setSellPoint((String) document.get("item_sell_point"));

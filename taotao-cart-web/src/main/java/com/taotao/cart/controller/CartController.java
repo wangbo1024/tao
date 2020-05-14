@@ -7,11 +7,15 @@ import com.taotao.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +32,8 @@ public class CartController {
         boolean b = false;
         if (cartList.size() > 0){
             for (TbItem tbItem:cartList) {
-                if (tbItem.getId() == itemId){
-                    tbItem.setNum(num);
+                if (tbItem.getId() == itemId.longValue()){
+                    tbItem.setNum(tbItem.getNum()+num);
                     b = true;
                     break;
                 }
@@ -38,9 +42,52 @@ public class CartController {
         if (!b){
             /*在cookie中没有该商品信息*/
             TbItem tbItem = itemService.findTbItemById(itemId);
-            String image = tbItem.getImage();
+            String images = tbItem.getImage();
+            String[] split = images.split("http");
+            tbItem.setImage("http"+split[1]);
+            //判断用户收藏的数量是否大于已有库存
+            if (tbItem.getNum() >= num){
+                tbItem.setNum(num);
+            }
+            cartList.add(tbItem);
         }
-        return null;
+        CookieUtils.setCookie(request,response,"TT_CART",JsonUtils.objectToJson(cartList),60*60*24*7,true);
+        return "cartSuccess";
+    }
+
+    @RequestMapping("/cart")
+    public String showCart(Model model,HttpServletRequest request){
+        List<TbItem> cartList = getCartList(request);
+        model.addAttribute("cartList",cartList);
+        return "cart";
+    }
+
+    @RequestMapping("/delete/{itemId}")
+    public String deleteCart(@PathVariable Long itemId,HttpServletResponse response, HttpServletRequest request) throws ServletException, IOException {
+        List<TbItem> cartList = getCartList(request);
+        for (int i = 0; i < cartList.size(); i++) {
+            if (cartList.get(i).getId() == itemId.longValue()){
+                cartList.remove(i);
+                break;
+            }
+        }
+        CookieUtils.setCookie(request,response,"TT_CART",JsonUtils.objectToJson(cartList),60*60*24*7,true);
+        return "redirect:/cart/cart.html";
+    }
+
+    @RequestMapping("/update/num/{itemId}/{num}")
+    public String updateCart(ModelAndView view, @PathVariable Long itemId, @PathVariable int num, HttpServletRequest request, HttpServletResponse response){
+        List<TbItem> cartList = getCartList(request);
+        for (int i = 0; i < cartList.size(); i++) {
+            if (cartList.get(i).getId() == itemId.longValue()){
+                TbItem tbItem = cartList.get(i);
+                tbItem.setNum(num);
+                cartList.set(i,tbItem);
+                break;
+            }
+        }
+        CookieUtils.setCookie(request,response,"TT_CART",JsonUtils.objectToJson(cartList),60*60*24*7,true);
+        return "cart";
     }
 
     /**
