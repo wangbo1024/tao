@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://code.alibabatech.com/schema/dubbo
+       http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <context:property-placeholder location="classpath:*.properties"/>
+    <!--注解扫描-->
+    <context:component-scan base-package="com.taotao.order.controller" />
+    <!--注解驱动-->
+    <mvc:annotation-driven />
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+         <!--<bean class="com.etc.interceptor.LoginInterceptor.etc.interceptor.MyInterceptor"></bean>-->
+         <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
+         <mvc:interceptor>
+             <mvc:mapping path="/order/**"/>
+             <mvc:exclude-mapping path="/login"/>
+             <bean class="com.taotao.order.handler.MyHandler"/>
+         </mvc:interceptor>
+     </mvc:interceptors>
+    <!-- 静态资源放行 -->
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/js/**" location="/js/"/>
+    <mvc:resources mapping="/images/**" location="/images/"/>
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    <!-- 引用dubbo服务 -->
+    <dubbo:application name="taotao-order-web"/>
+    <dubbo:registry protocol="zookeeper" address="192.168.67.131:2181"/>
+    <dubbo:reference interface="com.taotao.order.service.OrderService" id="orderService" timeout="30000" />
+    <dubbo:reference interface="com.taotao.service.SsoService" id="ssoService" timeout="30000" />
+</beans>
