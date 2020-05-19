@@ -24,7 +24,6 @@
          <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"></bean>
          <mvc:interceptor>
              <mvc:mapping path="/order/**"/>
-             <mvc:exclude-mapping path="/login"/>
              <bean class="com.taotao.order.handler.MyHandler"/>
          </mvc:interceptor>
      </mvc:interceptors>

@@ -26,6 +26,11 @@ public class SearchServiceImpl implements SearchService {
     private TbItemMapper itemMapper;
     @Autowired
     private SolrServer solrServer;
+
+    /**
+     * 一键导入solr索引库
+     * @return
+     */
     @Override
     public TaotaoResult importSolr() {
         try {
@@ -51,6 +56,12 @@ public class SearchServiceImpl implements SearchService {
         return TaotaoResult.build(500,"商品信息初始化失败");
     }
 
+    /**
+     * 在solr索引库中进行查询
+     * @param query
+     * @param page
+     * @return
+     */
     @Override
     public SearchItemResult findSearchItemByQuery(String query, Integer page) {
         SearchItemResult result = new SearchItemResult();
@@ -113,6 +124,10 @@ public class SearchServiceImpl implements SearchService {
         return null;
     }
 
+    /**
+     * 使用activeMQ对solr进行缓存同步
+     * @param item
+     */
     @Override
     public void addSearchItem(SearchItem item) {
         try {

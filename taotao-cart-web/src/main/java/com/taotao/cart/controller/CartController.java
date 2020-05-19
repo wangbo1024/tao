@@ -59,6 +59,11 @@ public class CartController {
     public String showCart(Model model,HttpServletRequest request){
         List<TbItem> cartList = getCartList(request);
         model.addAttribute("cartList",cartList);
+        int sum = 0;
+        for (TbItem item:cartList) {
+            sum+=item.getNum();
+        }
+        model.addAttribute("sum",sum);
         return "cart";
     }
 

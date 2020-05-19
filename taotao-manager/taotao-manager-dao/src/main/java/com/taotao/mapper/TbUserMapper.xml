@@ -4,8 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.taotao.mapper.TbUserMapper">
     <insert id="addUser">
-        INSERT INTO tbuser (userName, passWord, phone, email, created, updated)
-          VALUE (#{userName},#{passWord},#{phone},#{email},#{created},#{updated})
+        INSERT INTO tbuser (userName, passWord, phone, email, created, updated, status)
+          VALUE (#{userName},#{passWord},#{phone},#{email},#{created},#{updated},#{status})
     </insert>
 
     <select id="findUserByUsername" resultType="int">

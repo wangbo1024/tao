@@ -6,4 +6,23 @@
     <select id="findTbItemCatByParentId" resultType="com.taotao.pojo.TbItemCat">
         SELECT * FROM tbitemcat WHERE parentId = #{cId};
     </select>
+
+    <select id="findItemCatStatistics" resultType="com.taotao.pojo.ItemCatStatistics">
+        SELECT
+            t1.`name`,
+            t2.count value
+        FROM
+            tbitemcat t1,
+            (
+                SELECT
+                    cId,
+                    COUNT(cId) count
+                FROM
+                    tbitem
+                GROUP BY
+                    cId
+            ) t2
+        WHERE
+            t1.id = t2.cId
+    </select>
 </mapper>

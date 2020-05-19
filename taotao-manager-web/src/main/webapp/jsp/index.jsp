@@ -23,7 +23,8 @@ body, html, #allmap {
 <script
 	src="${pageContext.request.contextPath }/js/echarts-en.common.min.js"></script>
 <script src="${pageContext.request.contextPath }/js/index.js"></script>
-
+	<!-- 引入 echarts.js -->
+	<script src="${pageContext.request.contextPath }/js/echarts.all.js"></script>
 </head>
 <body class="layui-layout-body">
 	<div class="layui-layout layui-layout-admin">
@@ -127,13 +128,13 @@ body, html, #allmap {
 							<div class="layui-card">
 								<div class="layui-card-header">
 									<div>
-										<span>访问量</span> <span style="float: right; margin-top: 13px"
+										<span>每日用活</span> <span style="float: right; margin-top: 13px"
 											class="layui-badge layui-bg-blue">周</span>
 									</div>
 								</div>
 								<div class="layui-card-body">
-									<span style="font-size: 36px; color: #676767">99999</span></br> </br> <span
-										style="color: #676767">总访问量</span> <i style="float: right;"
+									<span style="font-size: 36px; color: #676767">${user_login_status}</span></br> </br> <span
+										style="color: #676767">每日用活</span> <i style="float: right;"
 										class="layui-icon layui-icon-flag"></i>
 								</div>
 							</div>
@@ -161,7 +162,7 @@ body, html, #allmap {
 									</div>
 								</div>
 								<div class="layui-card-body">
-									<span style="font-size: 36px; color: #676767">8000</span></br> </br> <span
+									<span style="font-size: 36px; color: #676767">${countUser}</span></br> </br> <span
 										style="color: #676767">总用户数</span> <i style="float: right;"
 										class="layui-icon layui-icon-user"></i>
 								</div>
@@ -176,7 +177,7 @@ body, html, #allmap {
 									</div>
 								</div>
 								<div class="layui-card-body">
-									<span style="font-size: 36px; color: #676767">16</span></br> </br> <span
+									<span style="font-size: 36px; color: #676767">${new_adduser_num}</span></br> </br> <span
 										style="color: #676767">新增人数</span> <i style="float: right;"
 										class="layui-icon layui-icon-user"></i>
 								</div>
@@ -187,13 +188,15 @@ body, html, #allmap {
 								<div class="layui-card">
 									<div class="layui-card-header">商品分类统计</div>
 									<div class="layui-card-body">
-										<div id="echartsMain1" style="width: 400px; height: 400px;"></div>
+										<div id="echartsMain1" style="width: 400px; height: 400px;">
+
+										</div>
 									</div>
 								</div>
 							</div>
 							<div class="layui-col-md6">
 								<div class="layui-card">
-									<div class="layui-card-header">当前地址</div>
+									<div class="layui-card-header"></div>
 									<div class="layui-card-body">
 										<div style="width: 400px; height: 400px" id="allmap"></div>
 									</div>

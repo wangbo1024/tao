@@ -58,6 +58,12 @@ public class ItemCatServiceImpl implements ItemCatService {
         return result;
     }
 
+    @Override
+    public List<ItemCatStatistics> statisticsItem() {
+        List<ItemCatStatistics> list = tbItemCatMapper.findItemCatStatistics();
+        return list;
+    }
+
     private List getItemCatList(Long parentId){
         List list = new ArrayList();
         int count = 0;

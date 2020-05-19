@@ -19,6 +19,8 @@ import java.util.UUID;
 public class SsoServiceImpl implements SsoService {
     private final int max = 3600;
     private final int min = 1800;
+    public static int num = 0;
+    public static int register = 0;
     private Random random = new Random();
     @Autowired
     private TbUserMapper tbUserMapper;
@@ -86,9 +88,15 @@ public class SsoServiceImpl implements SsoService {
         tbUser.setPassWord(password);
         tbUser.setCreated(date);
         tbUser.setUpdated(date);
+        tbUser.setStatus(0);
         int i = tbUserMapper.addUser(tbUser);
         if (i <= 0){
             return TaotaoResult.build(400,"注册失败");
+        }
+        jedisClient.incr("NEW_ADDUSER_NUM");
+        if (register == 0){
+            jedisClient.expire("NEW_ADDUSER_NUM",60);
+            register = 1;
         }
         return TaotaoResult.ok();
     }
@@ -111,6 +119,18 @@ public class SsoServiceImpl implements SsoService {
             jedisClient.expire("USER_INFO"+":"+ token,seconds);
             return TaotaoResult.build(400,"登录失败，用户名或密码错误","null");
         }
+        if (tbUser.getStatus() == 0){
+            tbUser.setStatus(1);
+            //修改MySQL数据库中当天用户的登录状态用以统计当天日活
+            tbUserMapper.updateUserStatus(1,tbUser.getId());
+            //每登录一个用户当天日活就加一，记录每日用活
+            jedisClient.incr("USER_LOGIN_STATUS");
+            if (num == 0){
+                jedisClient.expire("USER_LOGIN_STATUS",60);
+                num = 1;
+            }
+        }
+        //将用户登录信息存入redis缓存中
         jedisClient.set("USER_INFO"+":"+ token, JsonUtils.objectToJson(tbUser));
         jedisClient.expire("USER_INFO"+":"+ token,seconds);
         return TaotaoResult.ok(token);
@@ -141,5 +161,21 @@ public class SsoServiceImpl implements SsoService {
     public TaotaoResult logout(String token) {
         jedisClient.del("USER_INFO"+":"+ token);
         return TaotaoResult.ok();
+    }
+
+    /**
+     * 统计用户总数
+     * @return
+     */
+    @Override
+    public long findAllUser() {
+        long countUser = tbUserMapper.findAllUser();
+        return countUser;
+    }
+
+    public void updateUserStatus(){
+        tbUserMapper.updateAllUserStatus(0);
+        register = 0;
+        num = 0;
     }
 }

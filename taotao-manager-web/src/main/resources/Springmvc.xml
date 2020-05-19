@@ -17,7 +17,20 @@
     <!--注解扫描-->
     <context:component-scan base-package="com.taotao.controller" />
     <!--注解驱动-->
-    <mvc:annotation-driven />
+    <mvc:annotation-driven>
+        <!-- 消息转换器 -->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json;charset=UTF-8</value>
+                        <value>*/*;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!-- 静态资源放行 -->
     <mvc:resources mapping="/css/**" location="/css/"/>
     <mvc:resources mapping="/js/**" location="/js/"/>
@@ -37,6 +50,8 @@
     <dubbo:reference interface="com.taotao.service.ItemGroupService" id="itemGroupService" timeout="30000" />
     <dubbo:reference interface="com.taotao.content.service.ItemContentService" id="itemContentService" timeout="30000" />
     <dubbo:reference interface="com.taotao.search.service.SearchService" id="searchService" timeout="6000000" />
+    <dubbo:reference interface="com.taotao.service.SsoService" id="ssoService" timeout="6000000" />
+    <dubbo:reference interface="com.taotao.service.JedisClient" id="jedisClient" timeout="6000000" />
     <!-- 定义文件上传解析器 -->
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
@@ -45,5 +60,11 @@
         <!-- 设定文件上传的最大值5MB，5*1024*1024 -->
         <property name="maxUploadSize" value="5242880"></property>
     </bean>
+
+    <!-- 自动扫描swagger配置文件,写入swagger资源路径映射 -->
+    <bean id="swaggerconfig" class="com.taotao.manager.swagger.Swagger2Config"></bean>
+    <!--重要！配置swagger资源不被拦截-->
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
 </beans>

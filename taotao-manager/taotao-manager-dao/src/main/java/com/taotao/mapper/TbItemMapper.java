@@ -4,7 +4,6 @@ import com.taotao.pojo.SearchItem;
 import com.taotao.pojo.TbItem;
 import com.taotao.pojo.TbItemCatResult;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.Date;
 import java.util.List;
@@ -51,4 +50,5 @@ public interface TbItemMapper {
     List<SearchItem> findSearchItemAll();
 
     SearchItem findSearchItemById(@Param("id") Long id);
+
 }

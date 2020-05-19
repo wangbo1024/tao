@@ -72,9 +72,9 @@ public class UserController {
         if (StringUtils.isNotBlank(callback)){
             MappingJacksonValue jacksonValue = new MappingJacksonValue(callback);
             jacksonValue.setJsonpFunction(result.getData().toString());
-            return jacksonValue;
+            return "login";
         }
-        return JsonUtils.objectToJson(result);
+        return "login";
     }
 
 

@@ -13,4 +13,6 @@ public interface SsoService {
     TaotaoResult findUserByToken(String token);
 
     TaotaoResult logout(String token);
+
+    long findAllUser();
 }
