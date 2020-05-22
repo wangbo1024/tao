@@ -27,14 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private TbOrderItemMapper orderItemMapper;
     @Autowired
     private JedisClient jedisClient;
-    /**
-     * itemId: 158918563970770
-     orderItems[0].num:
-     orderItems[0].price:
-     orderItems[0].totalFee:
-     orderItems[0].title:
-     orderItems[0].picPath
-     */
+
     @Override
     public TaotaoResult addTbOrderItemAndOrderShipping(OrderInfo orderInfo) {
         if (!jedisClient.exists(Constant.ORDER_ID_KEY)){

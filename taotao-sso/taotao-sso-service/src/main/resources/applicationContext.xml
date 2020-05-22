@@ -127,7 +127,7 @@
     <!-- 定义trigger 触发器 -->
     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail"></property>
-        <!-- 定义触发时间 每个一分钟该定时器触发一次 -->
+        <!-- 定义触发时间 每隔3分钟该定时器触发一次 -->
         <property name="cronExpression" value="0 */5 * * * ?"></property>
     </bean>
     <!-- 设置触发器调度工厂 -->

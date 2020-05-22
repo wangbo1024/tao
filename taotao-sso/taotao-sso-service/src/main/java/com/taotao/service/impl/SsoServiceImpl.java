@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
@@ -19,14 +20,11 @@ import java.util.UUID;
 public class SsoServiceImpl implements SsoService {
     private final int max = 3600;
     private final int min = 1800;
-    public static int num = 0;
-    public static int register = 0;
     private Random random = new Random();
     @Autowired
     private TbUserMapper tbUserMapper;
     @Autowired
-    private JedisClient jedisClient;;
-
+    private JedisClient jedisClient;
     /**
      * 用户输入信息的校验
      * @param param 用户输入的值 用户名、电话号码、邮箱地址
@@ -94,10 +92,6 @@ public class SsoServiceImpl implements SsoService {
             return TaotaoResult.build(400,"注册失败");
         }
         jedisClient.incr("NEW_ADDUSER_NUM");
-        if (register == 0){
-            jedisClient.expire("NEW_ADDUSER_NUM",60);
-            register = 1;
-        }
         return TaotaoResult.ok();
     }
 
@@ -122,13 +116,9 @@ public class SsoServiceImpl implements SsoService {
         if (tbUser.getStatus() == 0){
             tbUser.setStatus(1);
             //修改MySQL数据库中当天用户的登录状态用以统计当天日活
-            tbUserMapper.updateUserStatus(1,tbUser.getId());
+            tbUserMapper.updateUserStatus(tbUser.getId());
             //每登录一个用户当天日活就加一，记录每日用活
             jedisClient.incr("USER_LOGIN_STATUS");
-            if (num == 0){
-                jedisClient.expire("USER_LOGIN_STATUS",60);
-                num = 1;
-            }
         }
         //将用户登录信息存入redis缓存中
         jedisClient.set("USER_INFO"+":"+ token, JsonUtils.objectToJson(tbUser));
@@ -173,9 +163,14 @@ public class SsoServiceImpl implements SsoService {
         return countUser;
     }
 
+    /**
+     * 定时任务，修改数据库中用户登录状态
+     */
     public void updateUserStatus(){
-        tbUserMapper.updateAllUserStatus(0);
-        register = 0;
-        num = 0;
+        tbUserMapper.updateAllUserStatus();
+        jedisClient.set("NEW_ADDUSER_NUM","0");
+        jedisClient.expire("NEW_ADDUSER_NUM",60*5);
+        jedisClient.set("USER_LOGIN_STATUS","0");
+        jedisClient.expire("USER_LOGIN_STATUS",60*5);
     }
 }

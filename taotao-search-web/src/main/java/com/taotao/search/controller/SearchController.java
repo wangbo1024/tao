@@ -33,7 +33,6 @@ public class SearchController {
         model.addAttribute("itemList", result.getItemList());
         model.addAttribute("totalCount",result.getTotalCount());
         model.addAttribute("page", page);
-        System.out.println();
         return "search";
     }
 }

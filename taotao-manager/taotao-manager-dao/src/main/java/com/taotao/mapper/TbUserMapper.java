@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.Date;
+
 public interface TbUserMapper {
 
     int addUser(TbUser tbUser);
@@ -19,8 +21,13 @@ public interface TbUserMapper {
     TbUser findUserByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
     @Select("SELECT COUNT(*) FROM tbuser")
     long findAllUser();
-    @Update("UPDATE tbuser SET `status` = #{status} WHERE id = #{id}")
-    int updateUserStatus(@Param("status") int status, @Param("id") Long id);
-    @Update("UPDATE tbuser SET `status` = #{status}")
-    void updateAllUserStatus(int status);
+
+    @Update("UPDATE tbuser SET `status` = 1 WHERE id = #{id}")
+    int updateUserStatus(Long id);
+
+    @Update("UPDATE tbuser SET `status` = 0")
+    int updateAllUserStatus();
+
+
+
 }

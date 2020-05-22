@@ -211,7 +211,6 @@ public class ItemServiceImpl implements ItemService {
          * 为什么发送id过去呢 ？
          * 因为 我发送了id过去  search-service可以根据id查询到商品信息
          * 就会得到商品对象  使用solrService。add（商品对象）;
-         *
          */
         jmsTemplate.send(destination, new MessageCreator() {
             @Override

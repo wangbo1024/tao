@@ -66,13 +66,11 @@ public class UserController {
 
     @RequestMapping(value = "/logout/{token}", method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE+";charset=utf-8")
-    @ResponseBody
-    public Object logout(@PathVariable String token,String callback){
+    public String logout(@PathVariable String token,String callback){
         TaotaoResult result = ssoService.logout(token);
         if (StringUtils.isNotBlank(callback)){
             MappingJacksonValue jacksonValue = new MappingJacksonValue(callback);
             jacksonValue.setJsonpFunction(result.getData().toString());
-            return "login";
         }
         return "login";
     }

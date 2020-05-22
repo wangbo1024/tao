@@ -101,9 +101,4 @@
         a.id = #{id}
     </select>
 
-
-
-    <insert id="addUser">
-        INSERT INTO testuser (name, age, "date") VALUE (#{name},#{age},#{date})
-    </insert>
 </mapper>
