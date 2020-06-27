@@ -97,11 +97,11 @@
             <groupId>com.github.sgroschupf</groupId>
             <artifactId>zkclient</artifactId>
         </dependency>
-        <!-- 支付宝 -->
+        <!-- 阿里云支付宝 -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
-            <version>3.3.49.ALL</version>
+            <version>3.0.0</version>
         </dependency>
 
     </dependencies>

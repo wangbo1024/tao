@@ -21,47 +21,67 @@
    <script type="text/javascript" src="/js/base-2011.js" charset="utf-8"></script>
    <script type="text/javascript" src="/js/jquery.cookie.js" charset="utf-8"></script>
    <script type="text/javascript" src="/js/taotao.js" charset="utf-8"></script>
-</head> <body id="mainframe">
-<!--shortcut start-->
-<jsp:include page="commons/shortcut.jsp" />
-<!--shortcut end-->
-<div class="w" id="headers">
-		<div id="logo"><a href="/"><img alt="淘淘商城" src="/images/taotao-logo.gif"></a></div>
-		<ul class="step" id="step3">
-			<li class="fore1">1.我的购物车<b></b></li>
-			<li class="fore2">2.填写核对订单信息<b></b></li>
-			<li class="fore3">3.成功提交订单</li>
-		</ul>
-		<div class="clr"></div>
-</div>
-<div class="w" id="safeinfo"></div><!--父订单的ID-->
-<div class="w main">
-	<div class="m m3 msop">
-        <div class="mt" id="success_tittle"><s class="icon-succ02"></s><h3 class="ftx-02">感谢您，订单提交成功！</h3>
-		</div>
-		<div class="mc" id="success_detail">	
-		    <ul class="list-order">
-			    <li class="li-st">
-					<div class="fore1">订单号：<a href="javascript:void(0)">${orderId }</a></div>
-					<!-- 货到付款 -->
-					<div class="fore2">货到付款：<strong class="ftx-01">${payment}元</strong></div>
-					<div class="fore3">
-					   	淘淘快递 &nbsp; 送货时间: 预计 ${date} 送达&nbsp;
-					</div>
-				</li>
+	  <script type="text/javascript">
+		  $(function () {
+		      if ($("#WIDbody").val() == ""){
+                  $('#formDownload').submit();
+              }
+          })
+	  </script>
+</head>
+  <body id="mainframe">
+	<!--shortcut start-->
+	<jsp:include page="commons/shortcut.jsp" />
+
+	<!--shortcut end-->
+	<div class="w" id="headers">
+			<div id="logo"><a href="/"><img alt="淘淘商城" src="/images/taotao-logo.gif"></a></div>
+			<ul class="step" id="step3">
+				<li class="fore1">1.我的购物车<b></b></li>
+				<li class="fore2">2.填写核对订单信息<b></b></li>
+				<li class="fore3">3.成功提交订单</li>
 			</ul>
-		<!-- 在线支付按钮  -->
-				<div id="bookDiv"></div>
- 					<p class="i-tips01">
-				            	您的订单已经在处理中，发货后订单内容会显示承运人联系方式，如有必要您可以联系对方
-             		</p>
-		 </div>
+			<div class="clr"></div>
 	</div>
-</div>
-  <div class="w">
-	<!-- links start -->
-    <jsp:include page="commons/footer-links.jsp"></jsp:include>
-    <!-- links end -->
-</div><!-- footer end -->
-     </body> 
+	<div class="w" id="safeinfo"></div><!--父订单的ID-->
+	<div class="w main">
+		<div class="m m3 msop">
+			<div class="mt" id="success_tittle"><s class="icon-succ02"></s><h3 class="ftx-02">感谢您，订单提交成功！</h3>
+			</div>
+			<div class="mc" id="success_detail">
+				<ul class="list-order">
+					<li class="li-st">
+						<div class="fore1">订单号：<a href="javascript:void(0)">${WIDout_trade_no }</a></div>
+						<div class="fore1">订单状态：<a href="javascript:void(0)">${orderStatus }</a></div>
+						<!-- 货到付款 -->
+						<div class="fore2">网上支付：<strong class="ftx-01">${WIDtotal_amount}元</strong></div>
+						<div class="fore3">
+							淘淘快递 &nbsp; 送货时间: 预计 ${date} 送达&nbsp;
+						</div>
+					</li>
+				</ul>
+			<!-- 在线支付按钮  -->
+					<div id="bookDiv"></div>
+						<p class="i-tips01">
+									您的订单已经在处理中，发货后订单内容会显示承运人联系方式，如有必要您可以联系对方
+						</p>
+			 </div>
+			<div style="display: none">
+				<form action="/pay" method="post" id="formDownload">
+					订单号：<input type="text" name="WIDout_trade_no" value="${WIDout_trade_no}" required><br/>
+					订单名称：<input type="text" name="WIDsubject" value="${WIDsubject}" required><br/>
+					付款金额：<input type="text" name="WIDtotal_amount" value="${WIDtotal_amount}" required><br/>
+					WIDbody：<input type="text" name="WIDbody" id="WIDbody" value="${WIDbody}"><br/>
+					<input type="submit" value="提交">
+				</form>
+			</div>
+		</div>
+	</div>
+	  <div class="w">
+		<!-- links start -->
+		<jsp:include page="commons/footer-links.jsp"></jsp:include>
+		<!-- links end -->
+	  </div>
+		<!-- footer end -->
+  </body>
 </html>
